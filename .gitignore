@@ -1,0 +1,21 @@
+# Dépendances
+node_modules/
+
+# Build
+dist/
+
+# Secrets — ne JAMAIS commiter
+.env
+
+# Base de données SQLite
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+prisma/*.db-shm
+
+# Logs
+logs/
+*.log
+
+# Système
+.DS_Store

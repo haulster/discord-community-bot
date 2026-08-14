@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="Discord Community Bot">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="55%" stop-color="#161b29"/>
+      <stop offset="100%" stop-color="#1e2140"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5865F2"/>
+      <stop offset="50%" stop-color="#7B6CF6"/>
+      <stop offset="100%" stop-color="#EB459E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#5865F2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#5865F2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="360" fill="url(#bg)"/>
+  <circle cx="1010" cy="180" r="260" fill="url(#glow)"/>
+
+  <!-- grille discrète -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <path d="M0 90h1280M0 180h1280M0 270h1280"/>
+    <path d="M160 0v360M320 0v360M480 0v360M640 0v360M800 0v360M960 0v360M1120 0v360"/>
+  </g>
+
+  <!-- corbeau stylisé -->
+  <g transform="translate(880 96)" fill="none" stroke="url(#accent)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 120 C40 68 80 30 132 30 C160 30 182 42 196 62 L232 54 L210 84 C216 96 219 110 219 124 C219 168 182 200 138 200 L52 200 C60 176 52 150 40 120 Z"/>
+    <path d="M92 200 L84 246 M138 200 L146 246"/>
+    <path d="M96 108 C120 96 148 100 166 118"/>
+  </g>
+  <circle cx="1030" cy="150" r="9" fill="#EB459E"/>
+
+  <!-- texte -->
+  <text x="90" y="150" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="66" font-weight="700" fill="#ffffff" letter-spacing="-1">Discord Community Bot</text>
+  <rect x="92" y="176" width="132" height="5" rx="2.5" fill="url(#accent)"/>
+  <text x="90" y="228" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="26" fill="#9aa4b8">Tickets · Giveaways · Bienvenue · Modération · Permissions</text>
+
+  <!-- puces techno -->
+  <g font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="20" fill="#c9d1e4">
+    <rect x="90" y="262" width="150" height="42" rx="21" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="165" y="289" text-anchor="middle">TypeScript</text>
+    <rect x="254" y="262" width="152" height="42" rx="21" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="330" y="289" text-anchor="middle">discord.js v14</text>
+    <rect x="420" y="262" width="176" height="42" rx="21" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="508" y="289" text-anchor="middle">Prisma · SQLite</text>
+    <rect x="610" y="262" width="112" height="42" rx="21" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="666" y="289" text-anchor="middle">PM2</text>
+  </g>
+
+  <rect x="0" y="352" width="1280" height="8" fill="url(#accent)"/>
+</svg>

@@ -1,0 +1,163 @@
+// Schéma Prisma — base SQLite.
+// Pour passer à PostgreSQL : provider = "postgresql" et DATABASE_URL adaptée.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------
+// Serveurs connus du bot
+// ------------------------------------------------------------
+model Guild {
+  id        String   @id // ID du serveur Discord
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ------------------------------------------------------------
+// Owners internes du bot (le Root Owner vient du .env, jamais d'ici)
+// ------------------------------------------------------------
+model BotOwner {
+  userId  String   @id
+  addedBy String
+  addedAt DateTime @default(now())
+}
+
+// ------------------------------------------------------------
+// Permissions internes par serveur.
+// targetType : "USER" | "ROLE"
+// level : "ADMIN" | "MODERATOR" | "TICKETS" | "GIVEAWAY" | "SERVER"
+// ------------------------------------------------------------
+model InternalPermission {
+  id         Int    @id @default(autoincrement())
+  guildId    String
+  targetId   String
+  targetType String
+  level      String
+
+  @@unique([guildId, targetId, level])
+  @@index([guildId])
+}
+
+// ------------------------------------------------------------
+// Tickets
+// ------------------------------------------------------------
+model TicketSettings {
+  guildId          String  @id
+  enabled          Boolean @default(false)
+  categoryId       String?
+  staffRoleId      String?
+  panelChannelId   String?
+  panelMessageId   String?
+  panelTitle       String  @default("Support")
+  panelDescription String  @default("Clique sur le bouton ci-dessous pour ouvrir un ticket.")
+  panelColor       String  @default("#5865F2")
+  panelEmoji       String  @default("🎫")
+  nameFormat       String  @default("ticket-{username}")
+  maxPerUser       Int     @default(1)
+  logChannelId     String?
+  openMessage      String  @default("Bonjour {user}, merci d'avoir ouvert un ticket. Un membre du staff va te répondre rapidement.")
+  closeMessage     String  @default("Ce ticket a été fermé. Merci de nous avoir contactés.")
+}
+
+model Ticket {
+  id          Int            @id @default(autoincrement())
+  guildId     String
+  channelId   String         @unique
+  userId      String
+  number      Int
+  status      String         @default("OPEN") // OPEN | CLOSED
+  createdAt   DateTime       @default(now())
+  closedAt    DateTime?
+  closedBy    String?
+  closeReason String?
+  members     TicketMember[]
+
+  @@index([guildId, userId])
+  @@index([guildId, status])
+}
+
+model TicketMember {
+  id       Int    @id @default(autoincrement())
+  ticketId Int
+  userId   String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, userId])
+}
+
+// ------------------------------------------------------------
+// Giveaways (persistants — survivent aux redémarrages)
+// ------------------------------------------------------------
+model Giveaway {
+  messageId      String          @id // ID du message Discord du giveaway
+  guildId        String
+  channelId      String
+  prize          String
+  winnerCount    Int             @default(1)
+  endsAt         DateTime
+  hostId         String
+  status         String          @default("ACTIVE") // ACTIVE | ENDED
+  requiredRoleId String?
+  blockedRoleId  String?
+  customMessage  String?
+  winnersJson    String          @default("[]") // JSON: string[] des IDs gagnants
+  createdAt      DateTime        @default(now())
+  endedAt        DateTime?
+  entries        GiveawayEntry[]
+
+  @@index([guildId, status])
+  @@index([status, endsAt])
+}
+
+model GiveawayEntry {
+  id         Int      @id @default(autoincrement())
+  giveawayId String
+  userId     String
+  createdAt  DateTime @default(now())
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [messageId], onDelete: Cascade)
+
+  @@unique([giveawayId, userId])
+}
+
+// ------------------------------------------------------------
+// Arrivées de membres (+join settings)
+// ------------------------------------------------------------
+model JoinSettings {
+  guildId    String  @id
+  enabled    Boolean @default(false)
+  channelId  String?
+  message    String  @default("Bienvenue {user} sur {server} !\nNous sommes maintenant {memberCount} membres.")
+  useEmbed   Boolean @default(true)
+  embedColor String  @default("#57F287")
+  dmEnabled  Boolean @default(false)
+  dmMessage  String  @default("Bienvenue sur {server}, {username} !")
+  autoRoles  String  @default("[]") // JSON: string[] d'IDs de rôles
+}
+
+// ------------------------------------------------------------
+// Système soutien (+soutien) — rôle auto selon le statut personnalisé
+// ------------------------------------------------------------
+model SoutienSettings {
+  guildId String  @id
+  enabled Boolean @default(false)
+  text    String  @default("")
+  roleId  String?
+}
+
+// ------------------------------------------------------------
+// Salons de logs (+logs) — le log tickets retombe aussi sur
+// TicketSettings.logChannelId s'il n'est pas défini ici.
+// ------------------------------------------------------------
+model LogSettings {
+  guildId             String  @id
+  moderationChannelId String?
+  ticketChannelId     String?
+  giveawayChannelId   String?
+  configChannelId     String?
+}
